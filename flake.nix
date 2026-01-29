@@ -102,5 +102,7 @@
           xwayland-satellite = xwayland-satellite;
           default = xwayland-satellite;
         };
+
+        formatter = pkgs.nixfmt;
       });
 }
