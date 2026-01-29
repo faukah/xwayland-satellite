@@ -8,9 +8,21 @@
     };
   };
 
-  outputs = { self, nixpkgs, rust-overlay, flake-utils }:
-    let systems = [ "x86_64-linux" "aarch64-linux" ];
-    in flake-utils.lib.eachSystem systems (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      rust-overlay,
+      flake-utils,
+    }:
+    let
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+    in
+    flake-utils.lib.eachSystem systems (
+      system:
       let
         overlays = [ (import rust-overlay) ];
         pkgs = import nixpkgs { inherit system overlays; };
@@ -23,14 +35,15 @@
         version = "${cargoPackageVersion}-${commitHash}";
 
         buildXwaylandSatellite =
-          { lib
-          , rustPlatform
-          , pkg-config
-          , makeBinaryWrapper
-          , libxcb
-          , xcb-util-cursor
-          , xwayland
-          , withSystemd ? true
+          {
+            lib,
+            rustPlatform,
+            pkg-config,
+            makeBinaryWrapper,
+            libxcb,
+            xcb-util-cursor,
+            xwayland,
+            withSystemd ? true,
           }:
 
           rustPlatform.buildRustPackage rec {
@@ -104,5 +117,6 @@
         };
 
         formatter = pkgs.nixfmt;
-      });
+      }
+    );
 }
